@@ -33,26 +33,26 @@ async def estado(ctx):
 # --- EL COMANDO DE LA IA MEJORADO ---
 @bot.command()
 async def analizar(ctx, ip: str, intentos: int):
-    """
-    Uso: !analizar 192.168.1.1 15
-    """
-    if modelo_ia is None:
-        await ctx.send("❌ Error: El motor de IA no está cargado.")
-        return
+    try:
+        if modelo_ia is None:
+            await ctx.send("❌ El motor de IA no está cargado.")
+            return
 
-    # 1. Preparamos el dato para la IA (debe ser una lista de listas: [[valor]])
-    # Nota: Asegúrate de que tu IA se entrenó solo con 'intentos_fallidos'
-    dato_entrada = [[intentos]]
-    
-    # 2. La IA hace la predicción
-    prediccion = modelo_ia.predict(dato_entrada) # Devuelve [0] o [1]
-    
-    # 3. Respondemos según el resultado
-    if prediccion[0] == 1:
-        await ctx.send(f"🚨 **ALERTA DE SEGURIDAD** 🚨\nLa IP `{ip}` muestra un patrón de **ATAQUE** ({intentos} intentos fallidos).")
-    else:
-        await ctx.send(f"✅ **IP Limpia**: El comportamiento de `{ip}` parece normal ({intentos} intentos).")
+        # Convertimos a formato que entiende Scikit-Learn
+        dato_entrada = [[int(intentos)]]
+        
+        # Hacemos la predicción
+        prediccion = modelo_ia.predict(dato_entrada)
+        
+        if prediccion[0] == 1:
+            await ctx.send(f"🚨 **ALERTA**: `{ip}` es un **ATAQUE**.")
+        else:
+            await ctx.send(f"✅ `{ip}` es **NORMAL**.")
 
+    except Exception as e:
+        # Esto nos dirá el error exacto en la terminal de VS Code
+        print(f"⚠️ Error dentro de !analizar: {e}")
+        await ctx.send(f"Hubo un error interno al analizar: {e}")
 # Arrancar el bot
 if __name__ == "__main__":
     if TOKEN:
