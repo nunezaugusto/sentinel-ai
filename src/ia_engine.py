@@ -8,7 +8,7 @@ def entrenar_si_no_existe():
     if not os.path.exists('modelo_sentinel.pkl'):
         print("📊 IA: Entrenando modelo por primera vez...")
         # Cargamos el CSV que me habéis enseñado antes
-        df = pd.read_csv('datos_logins.csv')
+        df = pd.read_csv('data/datos_logins.csv')
         
         # X son las pistas, y es la respuesta
         X = df[['intentos', 'usa_vpn', 'pais_sospechoso']]
@@ -18,12 +18,12 @@ def entrenar_si_no_existe():
         modelo.fit(X, y)
         
         # Guardamos el cerebro
-        joblib.dump(modelo, 'modelo_sentinel.pkl')
+        joblib.dump(modelo, 'models/modelo_sentinel.pkl')
         print("✅ IA: Modelo guardado como 'modelo_sentinel.pkl'")
 
 def analizar_login(intentos, vpn, pais):
     # Cargamos el cerebro y predecimos
-    modelo = joblib.load('modelo_sentinel.pkl')
+    modelo = joblib.load('models/modelo_sentinel.pkl')
     prediccion = modelo.predict([[intentos, vpn, pais]])
     
     # 1 significa Ataque, 0 significa Normal
