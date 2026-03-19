@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from datetime import datetime
 from src.agents.analyzer import CyberAnalyzer
 
-# Inicializamos FastAPI y tu Cerebro de IA
+# Inicializamos FastAPI y Cerebro de IA
 app = FastAPI(title="Kyros Sentinel Ingestor")
 analyzer = CyberAnalyzer()
 
